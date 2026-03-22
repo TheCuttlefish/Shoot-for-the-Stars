@@ -93,8 +93,8 @@ public class Game : MonoBehaviour
         if (Mathf.Abs(score - 3f) <= tolerance) //score >= 2.9995f && score <= 3.0005f
         {
             
-            score = 3.000f;
-            title.text = score.ToString("0.000");// force 3.000 becuase of input tolorance!!!
+            score = 3.000f; // can edit this later (for now I make score 3 and remove it in the line below)
+            title.text = ( score - 3f).ToString("0.000");// force 3.000 becuase of input tolorance!!!
             scoreList.AddPanel(score,true);
            
         }else
@@ -119,7 +119,7 @@ public class Game : MonoBehaviour
             score = timer;
         // font size needs to be imporved later / maybe??
             //title.fontSize = 122;// set font larger when game starts
-            title.text = timer.ToString("0.000");
+            title.text = (timer - 3f).ToString("0.000");
             bg.anchoredPosition = new Vector2(0, 0);
 
         //keep chekcing FPS

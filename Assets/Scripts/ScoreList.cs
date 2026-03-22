@@ -39,10 +39,18 @@ public class ScoreList : MonoBehaviour
 
         //show panel
         GameObject _p = Instantiate(panel,transform);
-        string scoreAsString = _score.ToString("0.000");
-        _p.transform.Find("score").GetComponent<Text>().text = _score.ToString("0.000");
-        _p.transform.Find("miss").GetComponent<Text>().text = (3.000f - _score).ToString("-0.000;+0.000");
+        string scoreAsString = (_score - 3f).ToString("0.000");// not sure if this used anymore
+         _p.transform.Find("score").GetComponent<Text>().text = (_score - 3f).ToString("0.000");
+        
+         _p.transform.Find("miss").GetComponent<Text>().text = (3.000f - _score).ToString("-0.000;+0.000");
 
+
+        if(3.000f - _score > 0)
+        _p.transform.Find("score").GetComponent<Text>().text = "EARLY";
+        else
+        {
+            _p.transform.Find("score").GetComponent<Text>().text = "LATE";
+        }
         //remove too many!
         if (transform.childCount > 20)Destroy(transform.GetChild(0).gameObject);
 
@@ -56,7 +64,7 @@ public class ScoreList : MonoBehaviour
         //FULL WIN
         if (_win)
         {
-
+            _p.transform.Find("score").GetComponent<Text>().text = "SUPER";
             OnWin.Invoke();
             _p.GetComponent<Image>().color = new Color(0, 0, 0, 0);
 
@@ -78,7 +86,8 @@ public class ScoreList : MonoBehaviour
             // SMALL WIN range
             if (_score >= 2.900f && _score <= 3.000f)
             {
-                OnSmallWin.Invoke();
+                
+               OnSmallWin.Invoke();
             }
 
             // TOO EARLY
