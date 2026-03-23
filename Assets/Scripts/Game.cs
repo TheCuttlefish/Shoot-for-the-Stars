@@ -19,6 +19,9 @@ public class Game : MonoBehaviour
     [Header("Score UI")]
     public ScoreList scoreList;
 
+    [Header("Seed UI")]
+    public SeedUI seedUI;
+
     [Header("Timer UI")]
     public Slider timeOutSlider;
     public TimerUI timerSlider;
@@ -77,7 +80,7 @@ public class Game : MonoBehaviour
                 rain.Stop();
                 bigWin.Stop();
                 smallWin.Stop();
-
+                seedUI.StopSpin();
                 animations.StartGame();
         //reset delta + FPS
         avgDelta = 0f;
