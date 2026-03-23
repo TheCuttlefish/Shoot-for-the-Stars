@@ -202,13 +202,36 @@ public class Game : MonoBehaviour
         if(playing) InPlayMode();
         else  IsStopped();
 
-       
+
+
+        //multitouch check
+        if (Input.touchCount > 1)
+        {
+            multiTouchUsed = true;
+        }
+
+        if (Input.touchCount == 0)
+        {
+            multiTouchUsed = false;
+        }
+
+
+
 
     }
-
+    bool multiTouchUsed = false;
 
     public void OnTap()
     {
+        if (multiTouchUsed)
+            return;
+
+        if (Input.touchCount > 1)
+            return;
+
+        if (Input.touchCount == 1 && Input.GetTouch(0).phase != TouchPhase.Ended)
+            return;
+
         tap = true;
     }
 }

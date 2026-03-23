@@ -8,27 +8,33 @@ public class CollectedStar : MonoBehaviour
     public RectTransform endPos;
 
     float duration = 1.0f;
-    float t = 1f;
+    float t = 0f;
 
     float arcHeight = 220f;
     float wiggleAmount = 10;
 
     float initialDelay = 0.5f;
-    float initialDelayT = 1f;
+    float initialDelayT = 0f;
 
     float delay = 0.6f;
-    float delayT = 1f;
+    float delayT = 0f;
     CanvasGroup myCanvas;
     RectTransform rect;
 
     Vector3 savedPos;
 
+    bool isActivated = false;
+    bool collected = false;
+
+    public StarPanel starPanel;
 
     public void ResetStar()
     {
         if (rect == null)
             rect = GetComponent<RectTransform>();
 
+        isActivated = true;
+        collected = false;
         // reset timers
         initialDelayT = 0f;
         delayT = 0f;
@@ -53,7 +59,26 @@ public class CollectedStar : MonoBehaviour
     void Update()
     {
 
+
+
+        if (t >= 0.9f && !collected)
+        {
+            collected = true;
+            
+            //print("collected! once!");
+            starPanel.Shake();
+        }
+
+        if(t > 1) isActivated = false; // deactive when flying-lerp is done
+
+
+
         if (Input.GetKeyDown(KeyCode.S)) ResetStar();
+
+        // if not actiavted then skip
+        if (!isActivated) return;
+
+
 
         myCanvas.alpha = 1-t;
 
