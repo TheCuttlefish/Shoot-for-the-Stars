@@ -1,7 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-
+using UnityEngine.UI;
 public class CamFollow : MonoBehaviour
 {
 
@@ -12,7 +12,31 @@ public class CamFollow : MonoBehaviour
     Vector3 mousePos;
     Vector3 clickedPos;
     float timer;
-    
+
+
+    public CanvasGroup mainMenuGroup;
+    public CanvasGroup interactiveUIGroup;
+    public CanvasGroup panUIGroup;
+
+    void ShowMainMenu(bool _default)
+    {
+        if (_default)
+        {
+            mainMenuGroup.alpha = 1;
+            interactiveUIGroup.alpha = 1;
+            panUIGroup.alpha = 0;
+        }else
+        {
+            mainMenuGroup.alpha = 0;
+            interactiveUIGroup.alpha = 0;
+            panUIGroup.alpha = 0.1f;
+
+        }
+
+    }
+
+
+
     // Update is called once per frame
     void Update()
     {
@@ -33,11 +57,13 @@ public class CamFollow : MonoBehaviour
         {
             clickedPos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
             isDragging = true;
+            ShowMainMenu(false);
 
         }
         if (Input.GetMouseButtonUp(1))
         {
             isDragging = false;
+            ShowMainMenu(true);
 
         }
 

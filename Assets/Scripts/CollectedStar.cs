@@ -111,8 +111,8 @@ public class CollectedStar : MonoBehaviour
         // Phase 3: movement (unchanged)
         t += Time.deltaTime / duration;
 
+        //float easedT = Mathf.SmoothStep(0, 1, t);
         float easedT = Mathf.SmoothStep(0, 1, t);
-
         Vector3 pos = Vector3.Lerp(savedPos, endPos.position, easedT);
 
         float arc = Mathf.Sin(easedT * Mathf.PI) * arcHeight;

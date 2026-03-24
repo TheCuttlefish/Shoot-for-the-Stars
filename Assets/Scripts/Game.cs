@@ -39,12 +39,14 @@ public class Game : MonoBehaviour
     public AnimationCurve shake;
     public BorderEffect borderEffect;
 
+    public GameObject winPoint;
+    public FailEffect failEffect;
+
     [Range(0.8f, 2f)]
     public float difficulty = 1.5f;
 
 
     public UnityEvent win;
-
     public void SetDiffilcuty(float _d)
     {
             difficulty = _d;
@@ -71,7 +73,7 @@ public class Game : MonoBehaviour
     //-7.821 - angle of the UI bg
     #endregion
 
-    void OnPlay()
+    void OnPlay() // is this a single frame ???
     {
 
                 shakeTimer = 0;
@@ -82,6 +84,7 @@ public class Game : MonoBehaviour
                 smallWin.Stop();
                 seedUI.StopSpin();
                 animations.StartGame();
+        winPoint.SetActive(true);
         //reset delta + FPS
         avgDelta = 0f;
         frames = 0;
@@ -102,6 +105,14 @@ public class Game : MonoBehaviour
            
         }else
         {
+
+
+
+
+            
+
+
+
             if (score < 3) { // rain
                 rain.Play();
             }
@@ -130,6 +141,21 @@ public class Game : MonoBehaviour
         frames++;
     }
     bool canResolveScore = true;
+
+
+    bool Lost()
+    {
+
+        averageFrame = avgDelta / Mathf.Max(frames, 1);
+        tolerance = Mathf.Clamp(averageFrame * difficulty, 0.005f, 0.03f);
+
+        if (Mathf.Abs(score - 3f) <= tolerance)
+            return false;
+
+        return true;
+
+    }
+
 
     void IsStopped()
     {
@@ -162,10 +188,13 @@ public class Game : MonoBehaviour
                 borderEffect.PlayEffect(); // border highlight!
                 timeOutSlider.value = 0; // force 0
                 timerSlider.GoTo(3.000f);// focce 3 seconds!!
+                winPoint.SetActive(true);// show win point glow just in case
             }
             else if (score > 3f + tolerance)
             {
+                
                 title.color = LoseColour;
+                
             }
             canResolveScore = false;
 
@@ -189,6 +218,20 @@ public class Game : MonoBehaviour
     void Update()
     {
         if (Input.GetKeyDown(KeyCode.R)) ResetGame(); /// remove with alpha version!!
+
+
+
+
+        // check if failed
+        if (timer > 3 && winPoint.activeSelf && Lost())
+        {
+            winPoint.SetActive(false);
+            failEffect.Play();
+        }
+        // --- end effect
+
+
+
 
         // input!!
         if ( Input.GetKeyDown(KeyCode.Space) || tap)
@@ -218,7 +261,12 @@ public class Game : MonoBehaviour
 
 
 
+
     }
+
+
+
+
     bool multiTouchUsed = false;
 
     public void OnTap()

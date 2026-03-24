@@ -90,7 +90,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   rain: {fileID: 21300000, guid: 7d63b7c76cd89e544adafb86495365d6, type: 3}
-  sun: {fileID: 21300000, guid: 6e835a14f36bb5b47afb15b3ff08fa24, type: 3}
+  sun: {fileID: 21300000, guid: 51d27f2dd9f628247a22e6b21423bb4c, type: 3}
   thunder: {fileID: 7482667652216324306, guid: 6f77f9ba123a8164e84a6e3e265f34c6, type: 3}
 --- !u!95 &2899970493143083127
 Animator:
