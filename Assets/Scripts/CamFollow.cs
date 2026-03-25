@@ -17,6 +17,7 @@ public class CamFollow : MonoBehaviour
     public CanvasGroup mainMenuGroup;
     public CanvasGroup interactiveUIGroup;
     public CanvasGroup panUIGroup;
+    public GameObject dots;
 
     void ShowMainMenu(bool _default)
     {
@@ -25,12 +26,14 @@ public class CamFollow : MonoBehaviour
             mainMenuGroup.alpha = 1;
             interactiveUIGroup.alpha = 1;
             panUIGroup.alpha = 0;
-        }else
+            dots.SetActive(false);
+        }
+        else
         {
             mainMenuGroup.alpha = 0;
             interactiveUIGroup.alpha = 0;
             panUIGroup.alpha = 0.1f;
-
+            dots.SetActive(true);
         }
 
     }

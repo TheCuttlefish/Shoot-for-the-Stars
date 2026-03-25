@@ -18,6 +18,8 @@ public class SeedUI : MonoBehaviour
         GetComponent<RectTransform>().localEulerAngles = Vector3.zero;
         GetComponent<RectTransform>().localScale = new Vector3(0.6991677f, 0.6991677f, 0f);
         ani.Stop();
+        ani.clip.SampleAnimation(gameObject, 0);
+        
     }
 
     public void StartSpin()

@@ -14,6 +14,7 @@ public class FailEffect : MonoBehaviour
 
     public void Play()
     {
+        
         Vector3 screenPos = RectTransformUtility.WorldToScreenPoint(null, uiTarget.TransformPoint(uiTarget.rect.center));
         Vector3 worldPos = Camera.main.ScreenToWorldPoint(screenPos) + new Vector3(0, 0, 0);
         worldPos.z = 0f;

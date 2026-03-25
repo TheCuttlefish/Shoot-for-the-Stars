@@ -1,18 +1,19 @@
 Shader "Custom/ScrollingFade_BlueNoise"
+
 {
     Properties
     {
         _MainTex ("Texture", 2D) = "white" {}
         _Color ("Tint", Color) = (1,1,1,1)
 
-        _ScrollSpeed ("Scroll Speed", Vector) = (0,1,0,0)
+        _ScrollOffset ("Scroll Offset", Vector) = (0,0,0,0)
 
         _FadeTop ("Fade Top", Range(0,10)) = 1
         _FadeBottom ("Fade Bottom", Range(0,10)) = 1
 
         // Blue noise
         _BlueNoise ("Blue Noise (tileable)", 2D) = "gray" {}
-        _NoiseTexSize ("Blue Noise Size", Float) = 128
+        _NoiseTexSize ("Noise Size", Float) = 128
         _NoiseScale ("Noise Scale", Float) = 1.0
         _DitherStrength ("Dither Strength", Range(0,0.25)) = 0.06
         _DitherRGB ("Dither RGB", Float) = 0
@@ -38,7 +39,7 @@ Shader "Custom/ScrollingFade_BlueNoise"
             sampler2D _BlueNoise;
 
             float4 _Color;
-            float4 _ScrollSpeed;
+            float4 _ScrollOffset;
 
             float _FadeTop;
             float _FadeBottom;
@@ -70,10 +71,9 @@ Shader "Custom/ScrollingFade_BlueNoise"
 
                 o.uvRaw = v.uv;
 
-                float2 scroll = _ScrollSpeed.xy * _Time.y;
-                o.uv = TRANSFORM_TEX(v.uv, _MainTex) + scroll;
+                // use manual scroll instead of _Time
+                o.uv = TRANSFORM_TEX(v.uv, _MainTex) + _ScrollOffset.xy;
 
-                // for screen-space noise
                 o.screenPos = ComputeScreenPos(o.vertex);
 
                 return o;
@@ -91,7 +91,6 @@ Shader "Custom/ScrollingFade_BlueNoise"
                 col.a *= fade;
 
                 // ===== BLUE NOISE DITHER =====
-
                 float2 screenUV = i.screenPos.xy / i.screenPos.w;
                 float2 px = screenUV * _ScreenParams.xy;
 
@@ -99,10 +98,8 @@ Shader "Custom/ScrollingFade_BlueNoise"
 
                 float n = tex2D(_BlueNoise, noiseUV).r - 0.5;
 
-                // apply to alpha
                 col.a = saturate(col.a + n * _DitherStrength);
 
-                // optional RGB dithering
                 if (_DitherRGB > 0.5)
                 {
                     col.rgb = saturate(col.rgb + n * _DitherStrength);

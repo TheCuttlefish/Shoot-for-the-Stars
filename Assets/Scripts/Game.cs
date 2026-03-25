@@ -40,8 +40,8 @@ public class Game : MonoBehaviour
     public BorderEffect borderEffect;
 
     public GameObject winPoint;
-    public FailEffect failEffect;
-
+    public FailEffect failFast;
+    public FailEffect failSlow;
     [Range(0.8f, 2f)]
     public float difficulty = 1.5f;
 
@@ -84,7 +84,8 @@ public class Game : MonoBehaviour
                 smallWin.Stop();
                 seedUI.StopSpin();
                 animations.StartGame();
-        winPoint.SetActive(true);
+       // winPoint.SetActive(true);
+        winPoint.GetComponent<WinPoint>().Show();
         //reset delta + FPS
         avgDelta = 0f;
         frames = 0;
@@ -96,31 +97,29 @@ public class Game : MonoBehaviour
          animations.StopGame();
          timer = 0;
 
-        if (Mathf.Abs(score - 3f) <= tolerance) //score >= 2.9995f && score <= 3.0005f
+
+
+        if (Mathf.Abs(score - 3f) <= tolerance)
         {
-            
-            score = 3.000f; // can edit this later (for now I make score 3 and remove it in the line below)
-            title.text = ( score - 3f).ToString("0.000");// force 3.000 becuase of input tolorance!!!
-            scoreList.AddPanel(score,true);
-           
-        }else
+            score = 3.000f;
+            title.text = (score - 3f).ToString("0.000");
+            scoreList.AddPanel(score, true);
+        }
+        else if (score < 3f - tolerance)
         {
+            // BEFORE target  too early
+            rain.Play();
+            winPoint.GetComponent<WinPoint>().Hide();
+            failSlow.Play();
 
+            scoreList.AddPanel(score, false);
+        }
+        else
+        {
+            // AFTER target too late
+            rain.Play();
 
-
-
-            
-
-
-
-            if (score < 3) { // rain
-                rain.Play();
-            }
-            else // thuinder needs to be ADDED!!!!
-            {
-                rain.Play();
-            }
-            scoreList.AddPanel(score,false);
+            scoreList.AddPanel(score, false);
         }
 
     }
@@ -171,9 +170,9 @@ public class Game : MonoBehaviour
         if (shakeTimer < 1)  shakeTimer += Time.deltaTime * 3;
         //screenshakes
         // TOO EARLY | LOSE 
-        if (score > 0f && score < 1f) ScreenShake(15);
-        else if (score >= 1f && score < 3f - tolerance) ScreenShake(5);
-        else if (score > 3f + tolerance) ScreenShake(150);
+        if (score > 0f && score < 2f)  ScreenShake(15);
+        else if (score >= 2f && score < 3f - tolerance) ScreenShake(5);
+        else if (score > 3f + tolerance) ScreenShake(15);
         
 
         if (canResolveScore)
@@ -188,7 +187,9 @@ public class Game : MonoBehaviour
                 borderEffect.PlayEffect(); // border highlight!
                 timeOutSlider.value = 0; // force 0
                 timerSlider.GoTo(3.000f);// focce 3 seconds!!
-                winPoint.SetActive(true);// show win point glow just in case
+                //winPoint.SetActive(true);// show win point glow just in case
+                //winPoint.GetComponent<WinPoint>().Show(); // this can go away??? I think bug is fixed, but I am keeping it here for now just in case it does not register then win properlly
+                winPoint.GetComponent<WinPoint>().Win();
             }
             else if (score > 3f + tolerance)
             {
@@ -223,10 +224,11 @@ public class Game : MonoBehaviour
 
 
         // check if failed
-        if (timer > 3 && winPoint.activeSelf && Lost())
+        if (timer > 3 && winPoint.GetComponent<WinPoint>().Visible() && Lost())
         {
-            winPoint.SetActive(false);
-            failEffect.Play();
+            winPoint.GetComponent<WinPoint>().Hide();
+            //winPoint.SetActive(false);
+            failFast.Play();
         }
         // --- end effect
 
