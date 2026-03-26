@@ -16,7 +16,7 @@ public class CollectedStar : MonoBehaviour
     float initialDelay = 0.5f;
     float initialDelayT = 0f;
 
-    float delay = 0.6f;
+    float delay = 0.9f;
     float delayT = 0f;
     CanvasGroup myCanvas;
     RectTransform rect;

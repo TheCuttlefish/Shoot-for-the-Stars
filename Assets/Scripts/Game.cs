@@ -12,6 +12,7 @@ public class Game : MonoBehaviour
     public CanvasGroup startButton;
     public Text title;
     public RectTransform bg;
+    public SeedPanelUI seedPanel;
 
     [Header("Animations")]
     public UIAnimations animations;
@@ -75,7 +76,7 @@ public class Game : MonoBehaviour
 
     void OnPlay() // is this a single frame ???
     {
-
+                seedPanel.UpdateSeed();
                 shakeTimer = 0;
                 timeOutSlider.value = 0;
                 title.color = defaultColour;

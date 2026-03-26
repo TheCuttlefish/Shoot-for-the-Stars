@@ -18,11 +18,13 @@ public class UIAnimations : MonoBehaviour
     public void StopGame()
     {
         start.Play("showStart");
+        start.transform.Find("get zero seconds").gameObject.SetActive(true);
         wave.Stop();
     }
 
     public void Win()
     {
+        start.transform.Find("get zero seconds").gameObject.SetActive(false);
         timer.Play("win");
     }
 
