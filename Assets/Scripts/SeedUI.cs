@@ -10,6 +10,8 @@ public class SeedUI : MonoBehaviour
     void Awake()
     {
         ani = GetComponent<Animation>();
+        ani.Stop();
+        ani.clip.SampleAnimation(gameObject, 0);
     }
 
     // Update is called once per frame

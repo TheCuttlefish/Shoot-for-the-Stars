@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.SceneManagement;
@@ -68,6 +69,8 @@ public class Game : MonoBehaviour
     private float shakeTimer = 10;// set it to something so you don't lose on start ?
 
 
+    //bool lost = false;
+
     #endregion
     #region notes
 
@@ -76,6 +79,8 @@ public class Game : MonoBehaviour
 
     void OnPlay() // is this a single frame ???
     {
+
+        
                 seedPanel.UpdateSeed();
                 shakeTimer = 0;
                 timeOutSlider.value = 0;
@@ -150,9 +155,15 @@ public class Game : MonoBehaviour
         tolerance = Mathf.Clamp(averageFrame * difficulty, 0.005f, 0.03f);
 
         if (Mathf.Abs(score - 3f) <= tolerance)
+        {
+            
             return false;
-
-        return true;
+        }
+        else
+        {
+           
+            return true;
+        }
 
     }
 
@@ -219,7 +230,7 @@ public class Game : MonoBehaviour
 
     void Update()
     {
-        if (Input.GetKeyDown(KeyCode.R)) ResetGame(); /// remove with alpha version!!
+        if (Input.GetKeyDown(KeyCode.Alpha0)) ResetGame(); /// remove with alpha version!!
 
 
 

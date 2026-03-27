@@ -15,9 +15,18 @@ public class ScoreList : MonoBehaviour
 
     public UnityEvent OnWin;
     public UnityEvent OnSmallWin;
-    public GameObject progressBox;
+    public GameObject history;
     public GameObject cell;
  
+
+    public int currentSteak = 0;
+
+    private void Update()
+    {
+        if (Input.GetKeyDown(KeyCode.Alpha1)) AddPanel(0, true);
+        
+    }
+
 
     private void Start()
     {
@@ -30,12 +39,13 @@ public class ScoreList : MonoBehaviour
     public void AddPanel(float _score, bool _win = true)
     {
         //show cell in the progress box
-        GameObject _cell;
-        _cell = Instantiate(cell, progressBox.transform);
-        _cell.transform.SetAsFirstSibling();
-        _cell.GetComponent<Image>().color = defaultColour;
-        _cell.GetComponent<Weather>().Rain();// set default to rain???? 
-
+        GameObject _result;
+        _result = Instantiate(cell, history.transform);
+        _result.transform.SetAsFirstSibling();
+        _result.GetComponent<Image>().color = defaultColour;
+        
+        _result.GetComponent<Result>().ShowIconAndMult("early");// set default to rain???? 
+        // just set default result icon when it spawns
 
         //show panel
         GameObject _p = Instantiate(panel,transform);
@@ -52,7 +62,7 @@ public class ScoreList : MonoBehaviour
             _p.transform.Find("score").GetComponent<Text>().text = "LATE";
         }
         //remove too many!
-        if (transform.childCount > 20)Destroy(transform.GetChild(0).gameObject);
+        if (transform.childCount > 9)Destroy(transform.GetChild(0).gameObject);
 
 
 
@@ -68,15 +78,17 @@ public class ScoreList : MonoBehaviour
             OnWin.Invoke();
             _p.GetComponent<Image>().color = new Color(0, 0, 0, 0);
 
-                _cell.GetComponent<Image>().color = WinColour;
-               // _cell.GetComponent<Image>().rectTransform.localScale = new Vector3(1, 1, 1) ;
-                 _cell.GetComponent<Weather>().Sun();
+                _result.GetComponent<Image>().color = WinColour;
+            // _cell.GetComponent<Image>().rectTransform.localScale = new Vector3(1, 1, 1) ;
+            currentSteak++;
+            _result.GetComponent<Result>().ShowIconAndMult("perfect", currentSteak);
                 _p.transform.Find("colour").GetComponent<Image>().color = WinColour;
 
         }
         else
         {
 
+                currentSteak = 0;
 
 
 
@@ -84,25 +96,26 @@ public class ScoreList : MonoBehaviour
 
 
             // SMALL WIN range
-            if (_score >= 2.900f && _score <= 3.000f)
+            if (_score >= 2.900f && _score <= 3.100f)
             {
                 
-               OnSmallWin.Invoke();
+               OnSmallWin.Invoke(); // this is small growth I think
             }
 
             // TOO EARLY
             else if (_score < 2.900f)
             {
-                _cell.GetComponent<Image>().color = defaultColour;
-                _cell.GetComponent<Weather>().Rain();
+                _result.GetComponent<Image>().color = defaultColour;
+                _result.GetComponent<Result>().ShowIconAndMult("late");
                 _p.transform.Find("colour").GetComponent<Image>().color = defaultColour;
             }
 
             // TOO LATE
             else
             {
-                _cell.GetComponent<Image>().color = LoseColour;
-                _cell.GetComponent<Weather>().Rain();
+                _result.GetComponent<Image>().color = LoseColour;
+                
+                _result.GetComponent<Result>().ShowIconAndMult("late");
                 _p.transform.Find("colour").GetComponent<Image>().color = LoseColour;
             }
 

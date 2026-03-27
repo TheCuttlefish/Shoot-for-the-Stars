@@ -90,6 +90,6 @@ Material:
     m_Colors:
     - _Color: {r: 1, g: 0.9647059, b: 0.5647059, a: 0}
     - _EmissionColor: {r: 0, g: 0, b: 0, a: 1}
-    - _ScrollOffset: {r: 0, g: -47.574875, b: 0, a: 0}
+    - _ScrollOffset: {r: 0, g: -11.090606, b: 0, a: 0}
     - _ScrollSpeed: {r: 0, g: -1, b: 0, a: 0}
   m_BuildTextureStacks: []

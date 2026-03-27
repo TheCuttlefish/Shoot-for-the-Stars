@@ -67,7 +67,7 @@ public class PointGen : MonoBehaviour
     {
 
 
-        if (Input.GetKeyDown(KeyCode.A))
+        if (Input.GetKeyDown(KeyCode.Alpha3))
         {
 
             if (transform.position.y < cam.transform.position.y - 10f)
@@ -78,7 +78,7 @@ public class PointGen : MonoBehaviour
         }
 
         // ---- INPUT: give 10 units per Space ----
-        if (Input.GetKeyDown(KeyCode.A) && canDuplicate)
+        if (Input.GetKeyDown(KeyCode.Alpha3) && canDuplicate)
         {
             moveBudget += 20f;     // allow 10 units of growth
             moveForward = true;    // start moving again

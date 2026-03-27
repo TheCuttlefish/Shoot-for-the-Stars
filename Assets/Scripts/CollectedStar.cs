@@ -73,7 +73,7 @@ public class CollectedStar : MonoBehaviour
 
 
 
-        if (Input.GetKeyDown(KeyCode.S)) ResetStar();
+        if (Input.GetKeyDown(KeyCode.Alpha1)) ResetStar();
 
         // if not actiavted then skip
         if (!isActivated) return;

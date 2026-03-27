@@ -11,7 +11,7 @@ public class WinPoint : MonoBehaviour
     Color originalInner = (Color)new Color32(255, 246, 144, 58);
     [Range(0f, 1f)]
     public float alphaControl = 0.0f;
-    bool isVisible = true;
+    bool isVisible = false;
 
     float timer;
 
@@ -22,7 +22,7 @@ public class WinPoint : MonoBehaviour
 
     private void Awake()
     {
-        SetAlpha(1);
+        SetAlpha(0);
     }
 
     public void Hide()

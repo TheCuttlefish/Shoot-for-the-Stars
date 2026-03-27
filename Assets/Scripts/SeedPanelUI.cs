@@ -23,7 +23,9 @@ public class SeedPanelUI : MonoBehaviour
         if (activeSeed > 8) return;
         activeSeed++;
         seeds[activeSeed - 1].GetComponent<Image>().color = spent;
-        seeds[activeSeed - 1].GetComponent<RectTransform>().localScale = new Vector3(0.5f, 0.5f, 0.5f);
+        seeds[activeSeed - 1].GetComponent<RectTransform>().localScale = new Vector3(1, 1, 1) * 0.3f;
+
+       
     }
 
 
