@@ -76,6 +76,7 @@ public class ScoreList : MonoBehaviour
         {
             _p.transform.Find("score").GetComponent<Text>().text = "SUPER";
             OnWin.Invoke();
+            
             _p.GetComponent<Image>().color = new Color(0, 0, 0, 0);
 
                 _result.GetComponent<Image>().color = WinColour;

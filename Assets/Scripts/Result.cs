@@ -18,7 +18,13 @@ public class Result : MonoBehaviour
 
         if (score > 1)
         {
-            //transform.Find("mult").GetComponent<Text>().color = 
+            Color c = transform.Find("mult").GetComponent<Text>().color;
+            
+            float t = Mathf.Clamp01(score / 9f); // get values + clamp to 1
+            t = Mathf.SmoothStep(0f, 1f, t); // steps 0 to 1
+            c.a = Mathf.Lerp(0.02f, 0.5f, t); // choice of spread - controlled mapping
+
+            transform.Find("mult").GetComponent<Text>().color = c;
             transform.Find("mult").GetComponent<Text>().text = "x" + (score);
 
         }

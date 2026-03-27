@@ -7,38 +7,63 @@ public class CollectedStar : MonoBehaviour
     public RectTransform startPos;
     public RectTransform endPos;
 
+    public StarPanel starPanel;
+
+    RectTransform rect;
+    CanvasGroup myCanvas;
+
+    // timings
     float duration = 1.0f;
     float t = 0f;
 
-    float arcHeight = 220f;
-    float wiggleAmount = 10;
-
-    float initialDelay = 0.5f;
+    float initialDelay;
     float initialDelayT = 0f;
 
-    float delay = 0.9f;
+    float delay;
     float delayT = 0f;
-    CanvasGroup myCanvas;
-    RectTransform rect;
+
+    // motion
+    float arcHeight;
+    float wiggleAmount;
+
+    // variation
+    float phaseOffset;
+    float localTime;
 
     Vector3 savedPos;
 
     bool isActivated = false;
     bool collected = false;
 
-    public StarPanel starPanel;
+    void Start()
+    {
+        rect = GetComponent<RectTransform>();
+        myCanvas = GetComponent<CanvasGroup>();
 
-    public void ResetStar()
+        rect.position = startPos.position;
+        rect.localScale = Vector3.zero;
+    }
+
+    public void ShowStar()
     {
         if (rect == null)
             rect = GetComponent<RectTransform>();
 
         isActivated = true;
         collected = false;
+
         // reset timers
+        t = 0f;
         initialDelayT = 0f;
         delayT = 0f;
-        t = 0f;
+        localTime = 0f;
+
+        // RANDOM VARIATION 🔥
+        phaseOffset = Random.Range(0f, 100f);
+        initialDelay = Random.Range(0.6f, 0.6f);
+        delay = Random.Range(0.6f, 0.9f);
+        arcHeight = Random.Range(-120f, 280f);
+        wiggleAmount = Random.Range(-100f, 100f);
 
         // reset transform
         savedPos = startPos.position;
@@ -46,52 +71,40 @@ public class CollectedStar : MonoBehaviour
         rect.localScale = Vector3.zero;
     }
 
-
-
-    void Start()
-    {
-        myCanvas = GetComponent<CanvasGroup>();
-        rect = GetComponent<RectTransform>();
-        rect.position = startPos.position;
-        rect.localScale = Vector3.zero;
-    }
-
     void Update()
     {
+        if (!isActivated) return;
 
+        localTime += Time.deltaTime;
 
-
+        // collect trigger
         if (t >= 0.9f && !collected)
         {
             collected = true;
-            
-            //print("collected! once!");
             starPanel.Shake();
         }
 
-        if(t > 1) isActivated = false; // deactive when flying-lerp is done
+        if (t > 1f)
+        {
+            isActivated = false;
+            return;
+        }
 
+        // fade out
+        myCanvas.alpha = 1f - t;
 
-
-        if (Input.GetKeyDown(KeyCode.Alpha1)) ResetStar();
-
-        // if not actiavted then skip
-        if (!isActivated) return;
-
-
-
-        myCanvas.alpha = 1-t;
-
-        float rotation = Mathf.Lerp(160f, 0f, t); // 3 spins
+        // rotation
+        float rotation = Mathf.Lerp(160f, 0f, t);
         rect.rotation = Quaternion.Euler(0f, 0f, rotation);
-        // Phase 1: initial wait (do nothing)
+
+        // -------- Phase 1: initial delay --------
         if (initialDelayT < initialDelay)
         {
             initialDelayT += Time.deltaTime;
             return;
         }
 
-        // Phase 2: scale pop
+        // -------- Phase 2: pop --------
         if (delayT < delay)
         {
             delayT += Time.deltaTime;
@@ -104,21 +117,26 @@ public class CollectedStar : MonoBehaviour
             scale = Mathf.Lerp(scale, 0.5f, easedS);
 
             rect.localScale = Vector3.one * scale;
-
             return;
         }
 
-        // Phase 3: movement (unchanged)
+        // -------- Phase 3: movement --------
         t += Time.deltaTime / duration;
 
-        //float easedT = Mathf.SmoothStep(0, 1, t);
-        float easedT = Mathf.SmoothStep(0, 1, t);
+        float easedT = Mathf.SmoothStep(0f, 1f, t);
+
         Vector3 pos = Vector3.Lerp(savedPos, endPos.position, easedT);
 
+        // arc
         float arc = Mathf.Sin(easedT * Mathf.PI) * arcHeight;
-        float wiggle = Mathf.Sin(easedT * Mathf.PI * 4) * wiggleAmount * Mathf.Cos(Time.time * 0.5f) * 10;
 
-        rect.position = pos + Vector3.up * arc + Vector3.up * wiggle;
+        // wiggle (phase offset applied here 🔥)
+        float wiggle =
+            Mathf.Sin(easedT * Mathf.PI * 4f + phaseOffset) *
+            wiggleAmount *
+            Mathf.Cos((localTime + phaseOffset) * 2f);
+
+        rect.position = pos + Vector3.up * (arc + wiggle);
 
         Debug.DrawLine(savedPos, endPos.position);
     }

@@ -61,7 +61,7 @@ public class Game : MonoBehaviour
 
 
     bool tap = false;
-
+    public StarContainer starContainer;
     #region private variable
     private bool playing = false;
     private float timer;
@@ -104,17 +104,19 @@ public class Game : MonoBehaviour
          timer = 0;
 
 
-
+          // ___ WIN WIN WIN WIN WIN WIN WIN WIN
         if (Mathf.Abs(score - 3f) <= tolerance)
         {
             score = 3.000f;
             title.text = (score - 3f).ToString("0.000");
             scoreList.AddPanel(score, true);
+            starContainer.UpdateMult();
         }
         else if (score < 3f - tolerance)
         {
             // BEFORE target  too early
             rain.Play();
+            starContainer.ResetMult();
             winPoint.GetComponent<WinPoint>().Hide();
             failSlow.Play();
 
@@ -124,7 +126,7 @@ public class Game : MonoBehaviour
         {
             // AFTER target too late
             rain.Play();
-
+            starContainer.ResetMult();
             scoreList.AddPanel(score, false);
         }
 
@@ -189,9 +191,10 @@ public class Game : MonoBehaviour
 
         if (canResolveScore)
         {
-            
+            // this all needs to be fixed - this should not be here as Im calcuationg it already above!!!
             if (Mathf.Abs(score - 3f) <= tolerance) //score >= 2.9995f && score <= 3.0005f
             {
+                
                 win.Invoke();// call win event!!
                 title.color = WinColour;
                 animations.Win();
@@ -205,7 +208,7 @@ public class Game : MonoBehaviour
             }
             else if (score > 3f + tolerance)
             {
-                
+               
                 title.color = LoseColour;
                 
             }
@@ -223,7 +226,7 @@ public class Game : MonoBehaviour
 
    public void ResetGame()
     {
-         SceneManager.LoadScene(0);
+         SceneManager.LoadScene("menu");
     }
 
     

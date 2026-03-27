@@ -4,28 +4,39 @@ using UnityEngine;
 
 public class UIAnimations : MonoBehaviour
 {
-    public Animation start, timer, wave;
+    public Animation start, timer;
 
+    int hintCounter = 0;
+    // start with 3 hints
+    // --- count down to 0 if fail to show hint again
+    // --- a win resets hints to 3 ( you need to fail 3 times)
 
     public void StartGame()
     {
 
         start.Play("hideStart");
         timer.Play("resetWin");
-        wave.Play("waveFast");
+        
     }
 
     public void StopGame()
     {
+        
         start.Play("showStart");
-        start.transform.Find("get zero seconds").gameObject.SetActive(true);
-        wave.Stop();
+
+        hintCounter--;
+        if (hintCounter < 0)
+        start.transform.Find("stop here").gameObject.SetActive(true);
+        else start.transform.Find("stop here").gameObject.SetActive(false);
     }
 
     public void Win()
     {
-        start.transform.Find("get zero seconds").gameObject.SetActive(false);
+        hintCounter = 3;
         timer.Play("win");
+
+        // hide this after first game!!!!
+        start.transform.Find("stop here").gameObject.SetActive(false);
     }
 
 }
