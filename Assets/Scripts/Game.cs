@@ -16,7 +16,7 @@ public class Game : MonoBehaviour
     public SeedPanelUI seedPanel;
 
     [Header("Animations")]
-    public UIAnimations animations;
+    public HintUI hint;
 
     [Header("Score UI")]
     public ScoreList scoreList;
@@ -46,7 +46,7 @@ public class Game : MonoBehaviour
     public FailEffect failSlow;
     [Range(0.8f, 2f)]
     public float difficulty = 1.5f;
-
+    public const float visualOffset = 0.05f;
 
     public UnityEvent win;
     public void SetDiffilcuty(float _d)
@@ -67,190 +67,13 @@ public class Game : MonoBehaviour
     private float timer;
     private float score;
     private float shakeTimer = 10;// set it to something so you don't lose on start ?
-
-
-    //bool lost = false;
-
-    #endregion
-    #region notes
-
-    //-7.821 - angle of the UI bg
-    #endregion
-
-    void OnPlay() // is this a single frame ???
-    {
-
-        
-                seedPanel.UpdateSeed();
-                shakeTimer = 0;
-                timeOutSlider.value = 0;
-                title.color = defaultColour;
-                rain.Stop();
-                bigWin.Stop();
-                smallWin.Stop();
-                seedUI.StopSpin();
-                animations.StartGame();
-       // winPoint.SetActive(true);
-        winPoint.GetComponent<WinPoint>().Show();
-        //reset delta + FPS
-        avgDelta = 0f;
-        frames = 0;
-        canResolveScore = true;
-
-    }
-    void OnStop()
-    {
-         animations.StopGame();
-         timer = 0;
-
-
-          // ___ WIN WIN WIN WIN WIN WIN WIN WIN
-        if (Mathf.Abs(score - 3f) <= tolerance)
-        {
-            score = 3.000f;
-            title.text = (score - 3f).ToString("0.000");
-            scoreList.AddPanel(score, true);
-            starContainer.UpdateMult();
-        }
-        else if (score < 3f - tolerance)
-        {
-            // BEFORE target  too early
-            rain.Play();
-            starContainer.ResetMult();
-            winPoint.GetComponent<WinPoint>().Hide();
-            failSlow.Play();
-
-            scoreList.AddPanel(score, false);
-        }
-        else
-        {
-            // AFTER target too late
-            rain.Play();
-            starContainer.ResetMult();
-            scoreList.AddPanel(score, false);
-        }
-
-    }
-    void InPlayMode()
-    {
-            timer += Time.deltaTime ; // main timer
-            timerSlider.GoTo( timer);// - play slider
-            if(timer > 3) timeOutSlider.value = timer - 3; // time out slider
-            
-            score = timer;
-        // font size needs to be imporved later / maybe??
-            //title.fontSize = 122;// set font larger when game starts
-            title.text = (timer - 3f).ToString("0.000");
-            bg.anchoredPosition = new Vector2(0, 0);
-
-        //keep chekcing FPS
-        avgDelta += Time.deltaTime;
-        frames++;
-    }
     bool canResolveScore = true;
-
-
-    bool Lost()
-    {
-
-        averageFrame = avgDelta / Mathf.Max(frames, 1);
-        tolerance = Mathf.Clamp(averageFrame * difficulty, 0.005f, 0.03f);
-
-        if (Mathf.Abs(score - 3f) <= tolerance)
-        {
-            
-            return false;
-        }
-        else
-        {
-           
-            return true;
-        }
-
-    }
-
-
-    void IsStopped()
-    {
-
-
-        averageFrame = avgDelta / Mathf.Max(frames, 1);
-        tolerance = Mathf.Clamp(averageFrame * difficulty, 0.005f, 0.03f); //-possible time step to get a perfect hit on different divecices (frame rates)
-                                                                           //----- 0.002 hard
-                                                                           //----- 0.003 medium
-                                                                           //----- 0.005 easy
-
-        //when pressed stop!!!
-        if (shakeTimer < 1)  shakeTimer += Time.deltaTime * 3;
-        //screenshakes
-        // TOO EARLY | LOSE 
-        if (score > 0f && score < 2f)  ScreenShake(15);
-        else if (score >= 2f && score < 3f - tolerance) ScreenShake(5);
-        else if (score > 3f + tolerance) ScreenShake(15);
-        
-
-        if (canResolveScore)
-        {
-            // this all needs to be fixed - this should not be here as Im calcuationg it already above!!!
-            if (Mathf.Abs(score - 3f) <= tolerance) //score >= 2.9995f && score <= 3.0005f
-            {
-                
-                win.Invoke();// call win event!!
-                title.color = WinColour;
-                animations.Win();
-                bigWin.Play();
-                borderEffect.PlayEffect(); // border highlight!
-                timeOutSlider.value = 0; // force 0
-                timerSlider.GoTo(3.000f);// focce 3 seconds!!
-                //winPoint.SetActive(true);// show win point glow just in case
-                //winPoint.GetComponent<WinPoint>().Show(); // this can go away??? I think bug is fixed, but I am keeping it here for now just in case it does not register then win properlly
-                winPoint.GetComponent<WinPoint>().Win();
-            }
-            else if (score > 3f + tolerance)
-            {
-               
-                title.color = LoseColour;
-                
-            }
-            canResolveScore = false;
-
-        }
-        
-
-    }
-    void ScreenShake(float _intensity)
-    {
-        bg.anchoredPosition = new Vector2(shake.Evaluate(shakeTimer) * _intensity, 0);
-    }
-   
-
-   public void ResetGame()
-    {
-         SceneManager.LoadScene("menu");
-    }
-
-    
-
+    bool multiTouchUsed = false;
+    bool tooLate = false;
+    #endregion
     void Update()
     {
         if (Input.GetKeyDown(KeyCode.Alpha0)) ResetGame(); /// remove with alpha version!!
-
-
-
-
-        // check if failed
-        if (timer > 3 && winPoint.GetComponent<WinPoint>().Visible() && Lost())
-        {
-            winPoint.GetComponent<WinPoint>().Hide();
-            //winPoint.SetActive(false);
-            failFast.Play();
-        }
-        // --- end effect
-
-
-
-
-        // input!!
         if ( Input.GetKeyDown(KeyCode.Space) || tap)
         {
             playing = !playing; //-- toggle play on input
@@ -259,32 +82,158 @@ public class Game : MonoBehaviour
         }
 
         //game loop
-        if(playing) InPlayMode();
-        else  IsStopped();
-
-
-
+        if (playing) InPlayMode();
+        else   inWaitingToStart();
+        
         //multitouch check
-        if (Input.touchCount > 1)
+        if (Input.touchCount > 1) multiTouchUsed = true;
+        if (Input.touchCount == 0) multiTouchUsed = false;
+    }
+
+    void OnPlay() // is this a single frame ???
+    {
+        tooLate = false;
+        timer = 0;
+        seedPanel.UpdateSeed();
+        shakeTimer = 0;
+        timeOutSlider.value = 0;
+        title.color = defaultColour;
+        rain.Stop();
+        bigWin.Stop();
+        smallWin.Stop();
+        seedUI.StopSpin();
+        hint.StartGame();
+        winPoint.GetComponent<WinPoint>().Show();
+        //reset delta + FPS
+        avgDelta = 0f;
+        frames = 0;
+        canResolveScore = true;
+
+        //reset background after shake
+        bg.anchoredPosition = new Vector2(0, 0);
+    }
+
+
+    void ResolveResult()
+    {
+        string result;
+
+        // --- Decide result
+        if (tooLate) result = "late";
+        else if (Mathf.Abs(score - 3f) <= tolerance) result = "win";
+        else if (score < 3f - tolerance) result = "early";
+        else result = "late";
+
+        ApplyResult(result);
+    }
+
+    void ApplyResult(string result)
+    {
+        switch (result)
         {
-            multiTouchUsed = true;
+            case "win":
+                timerSlider.GoTo(3.000f);
+                seedUI.StartSpin();
+                score = 3.000f;
+                title.text = (score - 3f).ToString("0.000");
+                scoreList.AddPanel(score, "win");
+                starContainer.UpdateMult();
+                winPoint.GetComponent<WinPoint>().Win();
+                hint.Hide();
+                break;
+
+            case "early":
+                if( score > (3 - visualOffset )) timerSlider.GoTo((3 - visualOffset));
+                rain.Play();
+                starContainer.ResetMult();
+                winPoint.GetComponent<WinPoint>().Hide();
+                failSlow.Play();
+                scoreList.AddPanel(score, "early");
+                hint.Show();
+                break;
+
+            case "late":
+                if (score < (3 + visualOffset)) timerSlider.GoTo((3 + visualOffset));
+                rain.Play();
+                starContainer.ResetMult();
+                scoreList.AddPanel(score, "late");
+                hint.Show();
+                break;
         }
+    }
 
-        if (Input.touchCount == 0)
-        {
-            multiTouchUsed = false;
-        }
-
-
+    void OnStop()
+    {
+        ResolveResult();
 
 
+    }
+    void InPlayMode()
+    {
+        timer += Time.deltaTime ; // main timer
+        timerSlider.GoTo( timer);// - play slider
+        if(timer > 3) timeOutSlider.value = timer - 3; // time out slider
+        score = timer;
+        title.text = (timer - 3f).ToString("0.000");
+        bg.anchoredPosition = new Vector2(0, 0);
+
+        //keep chekcing FPS
+        avgDelta += Time.deltaTime;
+        frames++;
+
+        //check tolorace
+        averageFrame = avgDelta / Mathf.Max(frames, 1);
+        tolerance = Mathf.Clamp(averageFrame * difficulty, 0.005f, 0.03f); // 0.0001 hard, 0,01 easy etc
+
+        TooLate();
 
     }
 
 
+    bool Lost()
+    {
+        if (Mathf.Abs(score - 3f) <= tolerance)return false;
+        else return true;
+        
+    }
 
 
-    bool multiTouchUsed = false;
+    void inWaitingToStart()
+    {
+        //when pressed stop!!!
+        if (shakeTimer < 1)  shakeTimer += Time.deltaTime * 3;
+        //screenshakes
+        // TOO EARLY | LOSE 
+        if (score > 0f && score < 2f)  ScreenShake(15);
+        else if (score >= 2f && score < 3f - tolerance) ScreenShake(5);
+        else if (score > 3f + tolerance) ScreenShake(15);
+    }
+    void ScreenShake(float _intensity)
+    {
+        bg.anchoredPosition = new Vector2(shake.Evaluate(shakeTimer) * _intensity, 0);
+    }
+   
+
+   public void ResetGame()
+   {
+         SceneManager.LoadScene("menu");
+   }
+
+
+   
+   void TooLate()
+    {
+        if (tooLate) return; // prevent spam
+
+        if (timer > 3f + tolerance && winPoint.GetComponent<WinPoint>().Visible())
+        {
+                tooLate = true;
+                winPoint.GetComponent<WinPoint>().Hide();
+                failFast.Play();
+        }
+    }
+    
+
 
     public void OnTap()
     {

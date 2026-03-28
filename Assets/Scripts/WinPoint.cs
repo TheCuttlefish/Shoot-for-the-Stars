@@ -34,6 +34,7 @@ public class WinPoint : MonoBehaviour
 
     public void Show()
     {
+        if (isVisible) return;
         Hide();
         SetAlpha(1);
         isVisible = true;

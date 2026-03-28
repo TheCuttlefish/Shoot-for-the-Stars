@@ -2,24 +2,26 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class UIAnimations : MonoBehaviour
+public class HintUI : MonoBehaviour
 {
-    public Animation start, timer;
+    Animation start;
 
     int hintCounter = 0;
     // start with 3 hints
     // --- count down to 0 if fail to show hint again
     // --- a win resets hints to 3 ( you need to fail 3 times)
 
-    public void StartGame()
+    private void Start()
     {
-
-        start.Play("hideStart");
-        timer.Play("resetWin");
-        
+        start = GetComponent<Animation>();
     }
 
-    public void StopGame()
+    public void StartGame()
+    {
+        start.Play("hideStart");
+    }
+
+    public void Show()
     {
         
         start.Play("showStart");
@@ -30,11 +32,9 @@ public class UIAnimations : MonoBehaviour
         else start.transform.Find("stop here").gameObject.SetActive(false);
     }
 
-    public void Win()
+    public void Hide()
     {
         hintCounter = 3;
-        timer.Play("win");
-
         // hide this after first game!!!!
         start.transform.Find("stop here").gameObject.SetActive(false);
     }

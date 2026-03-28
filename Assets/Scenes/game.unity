@@ -13645,7 +13645,7 @@ Transform:
   m_GameObject: {fileID: 519420028}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 1.4, y: 2.7, z: -10}
+  m_LocalPosition: {x: 0, y: 2.7, z: -10}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -26914,7 +26914,7 @@ MonoBehaviour:
   title: {fileID: 513001811}
   bg: {fileID: 1810375897}
   seedPanel: {fileID: 1415954033}
-  animations: {fileID: 1092762029}
+  hint: {fileID: 1148875853}
   scoreList: {fileID: 1008857358}
   seedUI: {fileID: 1427832288}
   timeOutSlider: {fileID: 233922497}
@@ -27010,8 +27010,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 99fc14665386aff4c8bdab8f3eec9b9f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  start: {fileID: 1148875852}
-  timer: {fileID: 1649310561}
 --- !u!1 &1122399518
 GameObject:
   m_ObjectHideFlags: 0
@@ -27175,8 +27173,9 @@ GameObject:
   - component: {fileID: 1148875849}
   - component: {fileID: 1148875851}
   - component: {fileID: 1148875852}
+  - component: {fileID: 1148875853}
   m_Layer: 5
-  m_Name: start button
+  m_Name: Hint-UI
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -27271,6 +27270,18 @@ Animation:
   m_PlayAutomatically: 0
   m_AnimatePhysics: 0
   m_CullingType: 0
+--- !u!114 &1148875853
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1148875847}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 99fc14665386aff4c8bdab8f3eec9b9f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &1153616586
 GameObject:
   m_ObjectHideFlags: 0
