@@ -140,6 +140,7 @@ public class Game : MonoBehaviour
                 starContainer.UpdateMult();
                 winPoint.GetComponent<WinPoint>().Win();
                 hint.Hide();
+                bigWin.Play();
                 break;
 
             case "early":
@@ -150,6 +151,7 @@ public class Game : MonoBehaviour
                 failSlow.Play();
                 scoreList.AddPanel(score, "early");
                 hint.Show();
+                rain.Play();
                 break;
 
             case "late":

@@ -7,7 +7,7 @@ Material:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: winPoint
+  m_Name: winPoint-area
   m_Shader: {fileID: 4800000, guid: b3872e43fb7781846986d3812697d51d, type: 3}
   m_Parent: {fileID: 0}
   m_ModifiedSerializedProperties: 0
@@ -48,8 +48,8 @@ Material:
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _MainTex:
-        m_Texture: {fileID: 2800000, guid: 1d1788f8730d2124799589eb07f83577, type: 3}
-        m_Scale: {x: 1.1, y: 2}
+        m_Texture: {fileID: 2800000, guid: 825091c254dd72942853051f238a2142, type: 3}
+        m_Scale: {x: 1, y: 2.58}
         m_Offset: {x: 0, y: 0}
     - _MetallicGlossMap:
         m_Texture: {fileID: 0}
@@ -71,8 +71,8 @@ Material:
     - _DitherRGB: 0
     - _DitherStrength: 0.06
     - _DstBlend: 0
-    - _FadeBottom: 0.1
-    - _FadeTop: 3.8
+    - _FadeBottom: 0.49
+    - _FadeTop: 2.52
     - _GlossMapScale: 1
     - _Glossiness: 0.5
     - _GlossyReflections: 1
@@ -88,8 +88,8 @@ Material:
     - _UVSec: 0
     - _ZWrite: 1
     m_Colors:
-    - _Color: {r: 1, g: 0.9647059, b: 0.5647059, a: 0}
+    - _Color: {r: 1, g: 0.9442968, b: 0.34366566, a: 0.6156863}
     - _EmissionColor: {r: 0, g: 0, b: 0, a: 1}
-    - _ScrollOffset: {r: 0, g: -228.17744, b: 0, a: 0}
-    - _ScrollSpeed: {r: 0, g: -0.6, b: 0, a: 0}
+    - _ScrollOffset: {r: 0, g: -0.51655596, b: 0, a: 0}
+    - _ScrollSpeed: {r: 0, g: -1, b: 0, a: 0}
   m_BuildTextureStacks: []
